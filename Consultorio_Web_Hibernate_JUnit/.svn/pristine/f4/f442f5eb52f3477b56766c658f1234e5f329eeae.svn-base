@@ -1,0 +1,191 @@
+package modelo;
+
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+import modelo.dao.ConsultaDAO;
+import modelo.dao.EnderecoDAO;
+import modelo.dao.PacienteDAO;
+import modelo.dao.PlanoDAO;
+import modelo.dao.TelefoneDAO;
+
+
+public class Singleton {
+
+	private static Singleton SINGLETON;
+	private PacienteDAO pacienteDAO = new PacienteDAO();
+	private EnderecoDAO enderecoDAO = new EnderecoDAO();
+	private PlanoDAO planoDAO = new PlanoDAO();
+	private TelefoneDAO telefoneDAO = new TelefoneDAO();
+	private ConsultaDAO consultaDAO = new ConsultaDAO();
+	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+	private SimpleDateFormat sdfCadastro = new SimpleDateFormat("dd/MM/yyyy");
+	private SimpleDateFormat sdfPlano = new SimpleDateFormat("MM/yyyy");
+	private Date td;
+			
+	
+	private Singleton() {
+
+	}
+
+	public static Singleton getInstance() {
+
+		if (SINGLETON == null) {
+
+			return SINGLETON = new Singleton();
+		}
+		return SINGLETON;
+	}
+
+	public void cadastrarEndereco(Paciente paciente) throws SQLException {
+		
+		enderecoDAO.cadastrarEndereco(paciente);
+	}
+	
+	/*public void cadastrarPlano(Paciente paciente) throws SQLException {
+			
+		planoDAO.cadastrarPlano(paciente);
+	}*/
+	
+	public void cadastrar(Paciente paciente) throws Exception {
+		
+		pacienteDAO.cadastrar(paciente);
+		/*telefoneDAO.cadastrarTelefone(paciente);
+		enderecoDAO.cadastrarEndereco(paciente);
+		planoDAO.cadastrarPlano(paciente);*/
+	}
+	
+	/*public List<Plano> getPlanos(Paciente paciente) throws SQLException{
+		
+		return planoDAO.getPlanos(paciente);
+	}
+	
+	public Endereco getEndereco(Paciente paciente) throws SQLException {
+		
+		return enderecoDAO.getEndereco(paciente);
+	}
+	
+	*/public void cadastrarTelefone(Paciente paciente) throws SQLException {
+		
+		telefoneDAO.cadastrarTelefone(paciente);
+	}
+	
+	public List<Telefone> getTelefones(Paciente paciente) throws SQLException{
+		
+		return telefoneDAO.getTelefones(paciente);
+	}/*
+	
+	public void alteraPlano(Paciente paciente) throws SQLException {
+		
+		planoDAO.alteraPlano(paciente);
+	}
+	
+	public void alteraEndereco(Paciente paciente) throws SQLException {
+		
+		enderecoDAO.alteraEndereco(paciente);
+	}
+	
+	public void alteraTelefone(Paciente paciente) throws Exception {
+		
+		telefoneDAO.alteraTelefone(paciente);
+	}
+	
+	public void excluir(Paciente paciente) throws Exception {
+		
+		pacienteDAO.excluir(paciente);
+	}
+	
+	public void alterar(Paciente paciente) throws Exception {
+		
+		pacienteDAO.alterar(paciente);
+	}
+
+	public Paciente lista(Paciente paciente) throws Exception {
+		
+		return pacienteDAO.lista(paciente);
+	}
+	
+	public Paciente listaPacienteCodigo(Paciente paciente) throws Exception {
+		
+		return pacienteDAO.listaPacienteCogido(paciente);
+	}
+	
+	public List<Paciente> listaPacienteNome(String nome) throws Exception {
+		
+		return pacienteDAO.listaPacienteNome(nome);
+	}
+	
+	public void cadastrarConsulta(Consulta consulta,Paciente paciente) throws Exception {
+		
+		consultaDAO.cadastrarConsulta(consulta,paciente);
+	}
+	
+	public Date ultimaData() throws Exception{
+		
+		return consultaDAO.ultimaData();
+	}
+	
+	public Consulta verificarConsulta(Consulta consulta) throws Exception {
+		
+		return consultaDAO.verificarConsulta(consulta);
+	}
+	
+	public void cadastrarDataDisponivelAgendada(List<Date> datas) throws Exception{
+		
+		consultaDAO.cadastrarDataDisponivelAgendada(datas);
+	}
+	
+	public List<Date> getLista(List<Date> listaDataDisponiveis) throws Exception{
+		return consultaDAO.getLista(listaDataDisponiveis);
+	}
+	public  void removeData(Date data) throws Exception {
+		consultaDAO.removeData(data);
+	}
+	public  void removeDataDiaAnterior() throws Exception {
+		consultaDAO.removeDataDiaAnterior();
+	}
+	
+	public List<Telefone> getTelefonesCodigo(Paciente paciente) throws SQLException {
+		
+		return telefoneDAO.getTelefonesCodigo(paciente);
+	}
+	public List<Plano> getPlanosCodigo(Paciente paciente) throws SQLException{
+		
+		return planoDAO.getPlanosCodigo(paciente);
+	}
+	
+	public void DesmarcarConsulta(Consulta consulta) throws SQLException{
+		consultaDAO.DesmarcarConsulta(consulta);
+	}
+
+	public List<Consulta> getConsultas(Paciente paciente) throws Exception{
+		
+		return consultaDAO.getConsultas(paciente);
+	}*/
+	public SimpleDateFormat sdf(){
+		return this.sdf;
+	}
+	public SimpleDateFormat sdfCadastro(){
+		return this.sdfCadastro;
+	}
+	public Date td(){
+		return this.td;
+	}
+	
+	public SimpleDateFormat getSdfPlano(){
+		return this.sdfPlano;
+	}
+	
+	public void setSdfPlano(SimpleDateFormat sdfPlano){
+		this.sdfPlano = sdfPlano;
+	}
+	
+	/*
+	public void setTd(Date date){
+		 this.td = date;
+	}*/
+
+}

@@ -1,0 +1,235 @@
+package modelo.dao;
+
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import modelo.Consulta;
+import modelo.Data;
+import modelo.Endereco;
+import modelo.Paciente;
+import modelo.Plano;
+import modelo.Telefone;
+
+
+public class ConsultorioService {
+	
+	private static ConsultorioService SINGLETON = new ConsultorioService();
+	
+	private PacienteDAO pacienteDAO;
+	private EnderecoDAO enderecoDAO;
+	private PlanoDAO planoDAO;
+	private TelefoneDAO telefoneDAO;
+	private ConsultaDAO consultaDAO;
+	
+	public static SimpleDateFormat SDF = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+	public static SimpleDateFormat SDF_CADASTRO = new SimpleDateFormat("dd/MM/yyyy");
+	public static SimpleDateFormat SDF_PLANO = new SimpleDateFormat("MM/yyyy");
+	private Date data;
+			
+	
+	private ConsultorioService() {		
+	}
+
+	public static ConsultorioService getInstance() {
+
+		SINGLETON.pacienteDAO = new PacienteDAO();
+		SINGLETON.enderecoDAO = new EnderecoDAO();
+		SINGLETON.planoDAO = new PlanoDAO();
+		SINGLETON.telefoneDAO = new TelefoneDAO();
+		SINGLETON.consultaDAO = new ConsultaDAO();
+		return SINGLETON;
+	}
+		
+	//////////////PACIENTE
+	public void cadastrar(Paciente paciente/*, ConnectionFactory connection*/) throws Exception {
+		
+		
+		pacienteDAO.cadastrar(paciente/*, connection*/);
+		
+	}
+	public void excluir(Paciente paciente) throws Exception {
+		
+		pacienteDAO.excluir(paciente);
+	}
+	
+	public void alterar(Paciente paciente) throws Exception {
+		
+		pacienteDAO.alterar(paciente);
+	}
+	
+	public Paciente recuperarPacientePorCpf(String cpf) throws Exception {
+		
+		return pacienteDAO.recuperarPacientePorCpf(cpf);
+	}
+	
+	
+	public List<Paciente> listaPacienteNome(String nome) throws Exception {
+		
+		return pacienteDAO.listarPacientePorNome(nome);
+	}
+	
+	public List<Paciente> listarTodosPacientes() throws Exception{
+		
+		return pacienteDAO.listarTodosPacientes();
+	}
+	/*UTILIZADO NO TESTE*/
+	  public Paciente consultarPacientePorCPF(String cpf) throws Exception {
+		
+		return pacienteDAO.consultarPacientePorCPF(cpf);
+	}
+	  
+	  public Paciente consultarPaciente(String id) {
+			
+			return pacienteDAO.consultarPaciente(id);
+		}
+	  
+	  	
+	//////////////ENDEREÇO
+	public void cadastrarEndereco(Paciente paciente) throws SQLException {
+		
+		enderecoDAO.cadastrarEndereco(paciente);
+	}
+	public List<Endereco> getEndereco(Paciente paciente) throws SQLException {
+		
+		return enderecoDAO.getEndereco(paciente);
+	}
+	
+	public void alteraEndereco(Paciente paciente) throws SQLException {
+		
+		enderecoDAO.alteraEndereco(paciente);
+	}
+	
+	
+	//////////////TELEFONE
+	/*public void cadastrarTelefone(Paciente paciente) throws SQLException {
+		
+		telefoneDAO.cadastrarTelefone(paciente);
+	}*/
+	
+	public List<Telefone> getTelefones(Paciente paciente) throws SQLException{
+		
+		return telefoneDAO.getTelefones(paciente);
+	}
+	/*public void alteraTelefone(Paciente paciente) throws Exception {
+		
+		telefoneDAO.alteraTelefone(paciente);
+	}
+	public List<Telefone> getTelefonesCodigo(Paciente paciente) throws SQLException {
+		
+		return telefoneDAO.getTelefonesCodigo(paciente);
+	}*/
+	
+	
+	//////////////PLANO
+	
+	public List<Plano> getPlanos(Paciente paciente) throws SQLException{
+
+		return planoDAO.getPlanos(paciente);
+	}
+
+//	public void alteraPlano(Paciente paciente) throws SQLException {
+//
+//	planoDAO.alteraPlano(paciente);
+//	}
+//	public List<Plano> getPlanosCodigo(Paciente paciente) throws SQLException{
+//	
+//	return planoDAO.getPlanosCodigo(paciente);
+//}
+
+	
+	//////////////CONSULTAS
+	public void cadastrarConsulta(Consulta consulta) throws Exception {
+		
+		consultaDAO.cadastrarConsulta(consulta);
+	}
+	public Consulta verificarConsulta(Consulta consulta) throws Exception {
+		
+		return consultaDAO.verificarConsulta(consulta);
+	}
+	public void desmarcarConsulta(Consulta consulta) throws SQLException{
+		consultaDAO.desmarcarConsulta(consulta);
+	}
+
+	public List<Consulta> getConsultas(Paciente paciente) throws Exception{
+		
+		return consultaDAO.getConsultas(paciente);
+	}
+	
+	
+	//////////////DATA
+
+	public Date ultimaData() throws Exception{
+		
+		return consultaDAO.ultimaData();
+	}
+	
+	public Consulta criarDatasDisponiveis (Date date, Calendar dataCalendar){
+		
+		List<Date> aux = new ArrayList<Date>();
+		Consulta consulta = new Consulta();
+		
+		try {
+			for (int i = 0; i < 2; i++) {
+
+				dataCalendar.add(Calendar.DAY_OF_MONTH, 1);
+				dataCalendar.set(Calendar.HOUR_OF_DAY, 8);
+				dataCalendar.set(Calendar.MINUTE, 0);
+				dataCalendar.set(Calendar.SECOND, 0);
+
+				for (int j = 0; j < 6; j++) {
+					
+					dataCalendar.add(Calendar.HOUR_OF_DAY, 1);
+				
+					String dataFormatada = ConsultorioService.SDF.format(dataCalendar.getTime());
+
+					date = ConsultorioService.SDF.parse(dataFormatada);
+
+					aux.add(date);
+
+				}
+			}
+			consulta.setListaDataDisponivel(aux);
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		
+		return consulta;
+	}
+		
+	public void cadastrarDataDisponivelAgendada(List<Date> datas) throws Exception{
+		
+		consultaDAO.cadastrarDataDisponivelAgendada(datas);
+	}
+	
+	public List<Data> getLista() throws Exception{
+		return consultaDAO.getLista();
+	}
+	
+	public  void removeData(Date data) throws Exception {
+		consultaDAO.removeData(data);
+	}
+	
+	public  void removeDataDiaAnterior() throws Exception {
+		consultaDAO.removeDataDiaAnterior();
+	}
+	
+
+	
+	public Date data(){
+		return this.data;
+	}
+	
+
+	
+	public void setData(Date date){
+		 this.data = date;
+	}
+
+	
+}

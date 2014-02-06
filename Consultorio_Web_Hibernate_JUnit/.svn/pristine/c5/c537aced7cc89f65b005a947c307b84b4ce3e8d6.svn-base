@@ -1,0 +1,60 @@
+package modelo;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+@Entity
+@Table(name="telefone")
+public class Telefone {
+
+	@Transient
+	private String ddd;
+	
+	@Column(name="numero")
+	private String numero;
+
+	@Column(name="tipotelefone")
+	private TipoTelefone tipo;
+	
+	public enum TipoTelefone {
+		CELULAR("Celular"), RESIDENCIAL("Residencial"), COMERCIAL("Comercial");
+		
+		private String label;
+		
+		private TipoTelefone(String label) {
+			this.label = label;
+		}
+		
+		public String getLabel() {
+			return label;
+		}
+	}
+
+	public String getDdd() {
+		return ddd;
+	}
+
+	public void setDdd(String ddd) {
+		this.ddd = ddd;
+	}
+
+	public String getNumero() {
+		return numero;
+	}
+
+	public void setNumero(String numero) {
+		this.numero = numero;
+	}
+
+	public TipoTelefone getTipo() {
+		
+		
+		return tipo;
+	}
+
+	public void setTipo(TipoTelefone tipo) {
+		this.tipo = tipo;
+	}
+}

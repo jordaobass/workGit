@@ -1,0 +1,99 @@
+package modelo;
+
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+
+
+@Entity
+@Table(name="consulta")
+public class Consulta {
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="cod_consulta")
+	private int codigo;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="data")
+	private Timestamp dataConsulta;
+	
+	@Column(name="tipoconsulta")
+	private String tipoConsulta;
+	
+	@Column(name="cpfpaciente")
+	private String cpf;
+	
+	@Column(name="nomepaciente")
+	private String nome;
+	
+	@Transient
+	protected List<Date> listaDataDisponivel = new ArrayList<Date>();
+
+
+	public List<Date> getListaDataDisponivel() {
+		return listaDataDisponivel;
+	}
+
+	public void setListaDataDisponivel(List<Date> listaDataDisponivel) {
+		this.listaDataDisponivel = listaDataDisponivel;
+	}
+
+	@Override
+	public String toString() {
+		return "Consulta [dataConsulta=" + dataConsulta + ", Tipo=" + tipoConsulta
+				+ ", cpf=" + cpf + ", nome=" + nome + "]";
+	}
+
+	public Timestamp getDataConsulta() {
+		return dataConsulta;
+	}
+
+	public void setDataConsulta(Timestamp dataConsulta) {
+		this.dataConsulta = dataConsulta;
+	}
+
+	public String getTipoConsulta() {
+		return tipoConsulta;
+	}
+
+	public void setTipoConsulta(String tipoConsulta) {
+		this.tipoConsulta = tipoConsulta;
+	}
+
+	public String getCpf() {
+		return cpf;
+	}
+
+	public void setCpf(String cpf) {
+		this.cpf = cpf;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public int getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(int codigo) {
+		this.codigo = codigo;
+	}
+
+}

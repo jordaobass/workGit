@@ -1,0 +1,158 @@
+package modelo.DAO;
+
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.Query;
+
+import modelo.Endereco;
+import modelo.Paciente;
+import modelo.Plano;
+import modelo.Telefone;
+import modelo.Plano.NomePlano;
+import modelo.Singleton;
+
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.joda.time.DateTime;
+
+public class PlanoDAO extends ConnectionFactory{
+	
+	private Session session;
+	private Transaction tx;
+	
+	public PlanoDAO (){
+		this.session = ConnectionFactory.getConnection();
+		// Cria uma transação
+		tx = session.beginTransaction();
+	}
+
+	public void cadastrarPlano(Paciente paciente) throws SQLException {
+		
+		Date data = null;
+		for (Plano plano : paciente.getPlanos()) {
+			
+			data = new Date(plano.getDataValidade().getMillis());
+			manager.persist(plano);
+			}
+		
+		/*PreparedStatement stmt = ConnectionFactory.getConnection().prepareStatement("INSERT INTO plano(nome,datavalidade,cpfpaciente, cod_paciente) VALUES(?,?,?,?)");
+
+		Date data = null;
+		
+		for (Plano plano : paciente.getPlanos()) {
+
+			data = new Date(plano.getDataValidade().getMillis());
+		
+			
+			stmt.setString(1, plano.getNome().getLabel());
+			stmt.setDate(2, data);
+			stmt.setString(3, paciente.getCpf());
+			stmt.setInt(4, paciente.getCodigo());
+
+			stmt.execute();
+			
+		}
+		
+		stmt.close();*/
+
+	}
+	
+	public List<Plano> getPlanos(Paciente paciente) throws SQLException{
+		
+		Query query = manager.createQuery("SELECT * FROM plano WHERE cpfpaciente = '" + paciente.getCpf() + "'");
+		List<Plano> planos = query.getResultList();
+		
+		/*Statement stmt = ConnectionFactory.getConnection().createStatement();
+		
+		ResultSet rs = stmt.executeQuery("SELECT * FROM plano WHERE cpfpaciente ='"+paciente.getCpf()+"'");
+		
+		List<Plano> planos = new ArrayList<Plano>();
+		
+		while (rs.next()) {
+			
+			Plano plano = new Plano();
+			plano.setNome(NomePlano.valueOf(rs.getString("nome").toUpperCase().replaceAll(" ", "")));
+			DateTime data = new DateTime(rs.getDate("datavalidade"));
+			plano.setDataValidade(data);
+			planos.add(plano);
+		}
+		
+		rs.close();
+		stmt.close();*/
+		
+		return planos;
+	}
+	
+	public List<Plano> getPlanosCodigo(Paciente paciente) throws SQLException{
+		
+		Query query = manager.createQuery("ELECT * FROM plano WHERE cod_paciente = '" + paciente.getCodigo() + "'");
+		List<Plano> planos = query.getResultList();
+		
+	/*Statement stmt = ConnectionFactory.getConnection().createStatement();
+		
+		ResultSet rs = stmt.executeQuery("SELECT * FROM plano WHERE cod_paciente ='"+paciente.getCodigo()+"'");
+		
+		List<Plano> planos = new ArrayList<Plano>();
+		
+		while (rs.next()) {
+			
+			Plano plano = new Plano();
+			plano.setNome(NomePlano.valueOf(rs.getString("nome").toUpperCase().replaceAll(" ", "")));
+			DateTime data = new DateTime(rs.getDate("datavalidade"));
+			plano.setDataValidade(data);
+			planos.add(plano);
+		}
+		
+		rs.close();
+		stmt.close();*/
+		
+		return planos;
+	}
+	
+	public void alteraPlano(Paciente paciente) throws SQLException {
+
+		List<Plano> planosAntigos = Singleton.getInstance().getPlanosCodigo(paciente);		
+		
+		//PreparedStatement stmt  = ConnectionFactory.getConnection().prepareStatement("UPDATE plano SET nome=?, datavalidade=?, cpfpaciente=? WHERE cod_paciente = ? AND nome = ?");
+		
+		int i = 0;
+		for (Plano plano : paciente.getPlanos()) {
+		
+			Plano planoAntigo = planosAntigos.get(i);
+			
+			if (!planoAntigo.getNome().equals(plano.getNome()) || !planoAntigo.getDataValidade().equals(plano.getDataValidade())) {
+			
+			Date data = new Date(plano.getDataValidade().getMillis());
+		
+			Plano plano1 = new Plano(); 
+			plano1 = manager.find(Plano.class, i);
+			session.update(plano1);
+			
+			
+			/*stmt.setString(1, plano.getNome().getLabel());
+			stmt.setDate(2, data);
+			stmt.setString(3, paciente.getCpf());
+			stmt.setInt(4, paciente.getCodigo());
+			stmt.setString(5, planoAntigo.getNome().getLabel());
+			
+			stmt.execute();*/
+			}
+			
+			i++;
+			
+		}
+		
+		//stmt.close();
+		
+		System.out.println("alterado");
+
+	}
+	
+	
+}

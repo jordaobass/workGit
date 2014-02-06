@@ -1,0 +1,10 @@
+<jsp:include page="header.jsp">
+	<jsp:param value="Erro" name="titulo"/>
+</jsp:include>
+	<div id="container">
+<h3 align="center"><br>Datas Geradas com Sucesso</h3>
+		<br/><br/><a href="index.jsp"><b>In&iacute;cio</b>
+
+	</div>
+
+<jsp:include page="footer.jsp"></jsp:include>

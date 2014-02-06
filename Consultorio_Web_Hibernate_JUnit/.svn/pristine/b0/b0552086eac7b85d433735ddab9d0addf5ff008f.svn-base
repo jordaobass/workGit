@@ -1,0 +1,79 @@
+
+package modelo.DAO;
+
+
+
+
+import java.util.Date;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
+import modelo.Endereco;
+import modelo.Paciente;
+import modelo.Telefone;
+import modelo.Telefone.TipoTelefone;
+
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+public class paciente_dao_teste {
+	
+	private PacienteDAO dao;
+	EntityManagerFactory emf = Persistence.createEntityManagerFactory("Consultorio_Web");
+	EntityManager em = emf.createEntityManager();
+	
+	
+		@Before
+		public void init() {
+			dao = new PacienteDAO();
+		}
+
+		@After
+		public void finish() {
+		}
+
+		@Test
+		public void cadastrarPaciente() {
+
+			Paciente p = new Paciente();
+			Endereco endereco = new Endereco();
+			Telefone telefone = new Telefone();
+			EntityManagerFactory emf = Persistence.createEntityManagerFactory("Consultorio_Web");
+			EntityManager em = emf.createEntityManager();
+			
+			
+			telefone.setDdd("21");
+			telefone.setNumero("21");
+			telefone.setTipo(TipoTelefone.CELULAR);
+			
+			endereco.setBairro("aa");
+			endereco.setCep("2102100");
+			endereco.setComplemento("fundso");
+			endereco.setEstado("rj");
+			endereco.setNumero("10");
+			endereco.setRua("aa");
+			
+			p.setCpf("02555252");
+			p.setEmail("jdoajasd");
+			p.setDataNasc(new Date());			
+			
+			
+			p.setEndereco(endereco) ;
+			
+			try {
+				dao.cadastrar(p);
+			} catch (Exception e) {
+				Assert.fail(e.getMessage());
+			}
+
+		}
+
+	}
+
+	
+	
+

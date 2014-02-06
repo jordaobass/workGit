@@ -1,0 +1,387 @@
+package modelo.DAO;
+
+import java.util.List;
+
+import modelo.Paciente;
+import modelo.Singleton;
+
+public class PacienteDAO extends ConnectionFactory {
+
+	
+	//private Calendar calendar = Calendar.getInstance();
+	
+	public PacienteDAO (){
+		
+	}
+	
+	
+	public void cadastrar(Paciente paciente) throws Exception {
+		
+		try{
+			manager.getTransaction().begin();
+			
+			/*
+			Singleton.getInstance().cadastrarPlano(paciente);
+			Singleton.getInstance().cadastrarEndereco(paciente);*/
+			
+			//int id = (Integer) session.save(paciente);
+			//paciente.setCodigo(id);
+
+			manager.persist(paciente);
+			Singleton.getInstance().cadastrarTelefone(paciente);
+			manager.getTransaction().commit();		
+			
+		}catch (Exception e) {
+			manager.getTransaction().rollback();
+			e.printStackTrace();
+	
+			throw new Exception(e.getMessage());
+	
+		} finally {
+			manager.close();
+		}
+
+	    
+	    
+	    
+	    /*try {
+			ConnectionFactory.getConnection().setAutoCommit(false);
+
+			Statement stmt = ConnectionFactory.getConnection()
+					.createStatement();
+
+			Date data = new Date(paciente.getDataNasc().getTimeInMillis());
+
+			stmt.execute("INSERT INTO paciente(nome,cpf,datanasc,email) values ('"
+					+ paciente.getNome()
+					+ "','"
+					+ paciente.getCpf()
+					+ "','"
+					+ data + "','" + paciente.getEmail() + "')", Statement.RETURN_GENERATED_KEYS);
+		
+			ResultSet inserido = stmt.getGeneratedKeys();
+			inserido.next();
+			int index = inserido.getInt(1);
+			paciente.setCodigo(index);
+			System.out.println(paciente.getCodigo());
+			
+			stmt.close();
+
+			Singleton.getInstance().cadastrarTelefone(paciente);
+			Singleton.getInstance().cadastrarEndereco(paciente);
+			Singleton.getInstance().cadastrarPlano(paciente);
+
+			ConnectionFactory.getConnection().commit();
+			System.out.println("gravado");
+		} catch (SQLException e) {
+			ConnectionFactory.getConnection().rollback();
+			e.printStackTrace();
+	
+			throw new Exception(e.getMessage());
+	
+		} finally {
+			ConnectionFactory.getConnection().close();
+		}*/
+		
+		
+		
+	}
+
+	public Paciente lista(Paciente paciente) throws Exception {
+		return null;
+		
+		/*try{
+			
+			Paciente pacienteEncontrado = (Paciente) session.load(Paciente.class, paciente.getCpf());
+			
+			manager.find(Paciente.class, paciente.getCpf());
+			
+			tx.commit();
+			return pacienteEncontrado;
+		}catch (Exception e) {
+			tx.rollback();
+			e.printStackTrace();
+	
+			throw new Exception(e.getMessage());
+	
+		} finally {
+			ConnectionFactory.getConnection().close();
+		}*/
+		
+		/*try {
+			ConnectionFactory.getConnection().setAutoCommit(false);
+			Statement stmt = ConnectionFactory.getConnection()
+					.createStatement();
+
+			ResultSet rs = stmt
+					.executeQuery("SELECT * FROM paciente WHERE cpf = '"
+							+ paciente.getCpf() + "'");
+
+			while (rs.next()) {
+
+				paciente.setCodigo(rs.getInt("cod_paciente"));
+				paciente.setCpf(rs.getString("cpf"));
+				paciente.setNome(rs.getString("nome"));
+				calendar.setTime(rs.getDate("datanasc"));
+				paciente.setDataNasc(calendar);
+				paciente.setEmail(rs.getString("email"));
+				paciente.setPlanos(Singleton.getInstance().getPlanos(paciente));
+				paciente.setEnderecos(Singleton.getInstance().getEnderecos(
+						paciente));
+				paciente.setTelefones(Singleton.getInstance().getTelefones(
+						paciente));
+				paciente.setConsultas(Singleton.getInstance().getConsultas(paciente));
+
+			}
+			System.out.println("paciente listado");
+		} catch (Exception e) {
+			ConnectionFactory.getConnection().rollback();
+			e.printStackTrace();
+		} finally {
+			ConnectionFactory.getConnection().close();
+		}*/
+
+		
+	}
+	
+	public Paciente listaPacienteCogido(Paciente paciente) throws Exception {
+		return null;
+		/*try{
+			Paciente pacienteEncontrado = (Paciente) session.load(Paciente.class, paciente.getCodigo());
+			
+			manager.find(Paciente.class, paciente.getCodigo());
+			
+			tx.commit();
+			return pacienteEncontrado;
+		}catch (Exception e) {
+			tx.rollback();
+			e.printStackTrace();
+	
+			throw new Exception(e.getMessage());
+	
+		} finally {
+			ConnectionFactory.getConnection().close();
+		}*/
+
+		/*try {
+			ConnectionFactory.getConnection().setAutoCommit(false);
+			Statement stmt = ConnectionFactory.getConnection()
+					.createStatement();
+
+			ResultSet rs = stmt
+					.executeQuery("SELECT * FROM paciente WHERE cod_paciente = '"
+							+ paciente.getCodigo() + "'");
+
+			while (rs.next()) {
+
+				paciente.setCodigo(rs.getInt("cod_paciente"));
+				paciente.setCpf(rs.getString("cpf"));
+				paciente.setNome(rs.getString("nome"));
+				calendar.setTime(rs.getDate("datanasc"));
+				paciente.setDataNasc(calendar);
+				paciente.setEmail(rs.getString("email"));
+				paciente.setPlanos(Singleton.getInstance().getPlanos(paciente));
+				paciente.setEnderecos(Singleton.getInstance().getEnderecos(
+						paciente));
+				paciente.setTelefones(Singleton.getInstance().getTelefones(
+						paciente));
+
+			}
+			System.out.println("paciente listado");
+		} catch (Exception e) {
+			ConnectionFactory.getConnection().rollback();
+			e.printStackTrace();
+		} finally {
+			ConnectionFactory.getConnection().close();
+		}
+
+		return paciente;*/
+	}
+	
+	public List<Paciente> listaPacienteNome(String nome) throws Exception {
+
+		return null;
+		/*try{
+			
+			Query query = manager.createQuery("SELECT * FROM Paciente WHERE NOME LIKE '" + nome + "%'");
+			List<Paciente> listaPaciente = query.getResultList();
+	
+			tx.commit();
+			return listaPaciente;
+		}catch (Exception e) {
+			tx.rollback();
+			e.printStackTrace();
+	
+			throw new Exception(e.getMessage());
+	
+		} finally {
+			ConnectionFactory.getConnection().close();
+		}*/
+
+		
+		/*List<Paciente> listaPacienteNome = new ArrayList<Paciente>();
+
+		try {
+			ConnectionFactory.getConnection().setAutoCommit(false);
+			Statement stmt = ConnectionFactory.getConnection()
+					.createStatement();
+
+			ResultSet rs = stmt
+					.executeQuery("SELECT * FROM paciente where nome like '" + nome + "%'");
+			
+			while (rs.next()) {
+				Paciente paciente = new Paciente();
+				
+				paciente.setCodigo(rs.getInt("cod_paciente"));
+				paciente.setCpf(rs.getString("cpf"));
+				paciente.setNome(rs.getString("nome"));
+				calendar.setTime(rs.getDate("datanasc"));
+				paciente.setDataNasc(calendar);
+				paciente.setEmail(rs.getString("email"));                                                                                                                                 
+				paciente.setPlanos(Singleton.getInstance().getPlanos(paciente));
+				paciente.setEnderecos(Singleton.getInstance().getEnderecos(
+						paciente));
+				paciente.setTelefones(Singleton.getInstance().getTelefones(
+						paciente));
+				
+				listaPacienteNome.add(paciente);
+
+			}
+			System.out.println("paciente listado");
+		} catch (Exception e) {
+			ConnectionFactory.getConnection().rollback();
+			e.printStackTrace();
+		} finally {
+			ConnectionFactory.getConnection().close();
+		}
+
+		return listaPacienteNome;*/
+	}
+	
+	public void alterar(Paciente paciente) throws Exception {
+
+		/*try{
+			session.update(paciente);
+			tx.commit();
+			
+			Singleton.getInstance().alteraEndereco(paciente);
+			Singleton.getInstance().alteraPlano(paciente);
+			Singleton.getInstance().alteraTelefone(paciente);
+			
+			
+		}catch (Exception e) {
+			tx.rollback();
+			e.printStackTrace();
+	
+			throw new Exception(e.getMessage());
+	
+		} finally {
+			ConnectionFactory.getConnection().close();
+		}*/
+
+		/*try {
+
+			ConnectionFactory.getConnection().setAutoCommit(false);
+			Statement stmt = ConnectionFactory.getConnection()
+					.createStatement();
+
+			Date data = new Date(paciente.getDataNasc().getTimeInMillis());
+
+			stmt.executeUpdate("UPDATE paciente SET nome='"	+ paciente.getNome() 
+					+ "', datanasc='" + data 
+					+ "', cpf='" + paciente.getCpf()
+					+ "',email='"+ paciente.getEmail() 
+					+ "' WHERE cod_paciente = '"+ paciente.getCodigo() + "'");
+
+			stmt.close();
+
+			Singleton.getInstance().alteraEndereco(paciente);
+			Singleton.getInstance().alteraPlano(paciente);
+			Singleton.getInstance().alteraTelefone(paciente);
+
+			ConnectionFactory.getConnection().commit();
+			System.out.println("alterado");
+
+		} catch (SQLException e) {
+
+			ConnectionFactory.getConnection().rollback();
+			e.printStackTrace();
+			throw new Exception(e.getMessage());
+
+		} finally {
+			ConnectionFactory.getConnection().close();
+
+		}
+*/
+	}
+
+	public void excluir(Paciente paciente) throws Exception {
+
+		/*try{
+			session.delete(paciente);
+			
+			manager.detach(paciente);
+			
+			tx.commit();
+			
+			//CHAMAR EXCLUIR ENDEREÇO E EXCLUIR TELEFONE
+			
+		}catch (Exception e) {
+			tx.rollback();
+			e.printStackTrace();
+	
+			throw new Exception(e.getMessage());
+	
+		} finally {
+			ConnectionFactory.getConnection().close();
+		}*/
+		
+		/*try {
+			ConnectionFactory.getConnection().setAutoCommit(false);
+			Statement stmt = ConnectionFactory.getConnection()
+					.createStatement();
+
+			stmt.executeUpdate("DELETE FROM endereco WHERE cpfpaciente = '"
+					+ paciente.getCpf() + "'");
+
+			System.out.println("Excluindo o endereco...");
+
+			stmt.close();
+
+			Statement stmt2 = ConnectionFactory.getConnection()
+					.createStatement();
+
+			stmt2.executeUpdate("DELETE FROM plano WHERE cpfpaciente = '"
+					+ paciente.getCpf() + "'");
+			System.out.println("Excluindo o plano...");
+
+			stmt2.close();
+
+			Statement stmt3 = ConnectionFactory.getConnection()
+					.createStatement();
+
+			stmt3.executeUpdate("DELETE FROM telefone WHERE cpfpaciente =' "
+					+ paciente.getCpf() + "'");
+			System.out.println("Excluindo o telefone...");
+
+			stmt3.close();
+
+			Statement stmt4 = ConnectionFactory.getConnection()
+					.createStatement();
+
+			stmt4.executeUpdate("DELETE FROM paciente WHERE cpf = '"
+					+ paciente.getCpf() + "'");
+			System.out.println("Excluindo o cliente...");
+			stmt4.close();
+			
+			ConnectionFactory.getConnection().commit();
+			
+		} catch (Exception e) {
+			ConnectionFactory.getConnection().rollback();
+			e.printStackTrace();
+		} finally {
+			ConnectionFactory.getConnection().close();
+		}*/
+	}
+
+}

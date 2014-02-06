@@ -1,0 +1,12 @@
+package excecao;
+
+public class CapturarDataexception extends Exception{
+
+	@Override
+	public String toString() {
+		return "Erro ao capturar a última data!";
+	}
+	
+	
+
+}

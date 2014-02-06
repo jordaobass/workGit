@@ -1,0 +1,125 @@
+package modelo.DAO;
+
+import java.io.Serializable;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
+import modelo.Endereco;
+import modelo.Paciente;
+
+public class EnderecoDAO extends ConnectionFactory {
+
+	
+	private Session session;
+	private Transaction tx;
+	
+	public EnderecoDAO (){
+		this.session = ConnectionFactory.getConnection();
+		// Cria uma transação
+		tx = session.beginTransaction();
+	}
+	
+	
+	
+	public void cadastrarEndereco(Paciente paciente) throws SQLException {
+	
+		Endereco endereco = new Endereco();
+		endereco = paciente.getEndereco();
+		manager.persist(endereco);
+		
+		/*PreparedStatement stmt = ConnectionFactory.getConnection().prepareStatement("INSERT INTO endereco(cidade,estado,rua,bairro,numero,complemento,cep,cpfpaciente, cod_paciente) VALUES(?,?,?,?,?,?,?,?,?)");
+
+		for (Endereco endereco : paciente.getEnderecos()) {
+
+			
+			stmt.setString(1, endereco.getCidade());
+			stmt.setString(2, endereco.getEstado());
+			stmt.setString(3, endereco.getRua());
+			stmt.setString(4, endereco.getBairro());
+			stmt.setString(5, endereco.getNumero());
+			stmt.setString(6, endereco.getComplemento());
+			stmt.setString(7, endereco.getCep());
+			stmt.setString(8, paciente.getCpf());
+			stmt.setInt(9, paciente.getCodigo());
+			stmt.addBatch();
+		}
+		stmt.executeUpdate();
+		stmt.close();*/
+	}
+
+	public Endereco getEndereco(Paciente paciente) throws SQLException {
+
+		
+		Endereco enderecoEncontrado = (Endereco) session.load(Endereco.class, (Serializable) paciente.getEndereco());		
+		manager.find(Endereco.class, paciente.getEndereco());
+		
+		/*Statement stmt = ConnectionFactory.getConnection().createStatement();
+
+		ResultSet rs = stmt.executeQuery("SELECT * FROM endereco WHERE cpfpaciente = '"+ paciente.getCpf()+"'");
+
+		List<Endereco> enderecos = new ArrayList<Endereco>(); 
+				enderecos = paciente.getEnderecos();
+
+		while (rs.next()) {
+
+			Endereco endereco = new Endereco();
+			endereco.setRua(rs.getString("rua"));
+			endereco.setBairro(rs.getString("bairro"));
+			endereco.setNumero(rs.getString("numero"));
+			endereco.setComplemento(rs.getString("complemento"));
+			endereco.setCidade(rs.getString("cidade"));
+			endereco.setEstado(rs.getString("estado"));
+			endereco.setCep(rs.getString("cep"));
+			enderecos.add(endereco);
+		}
+		
+		rs.close();
+		stmt.close();*/
+		
+		return enderecoEncontrado;
+	}
+	
+	
+	
+	public void alteraEndereco(Paciente paciente) throws SQLException {
+
+		
+		Endereco endereco = new Endereco();
+		endereco = paciente.getEndereco();
+		session.update(endereco);
+		
+		
+		/*PreparedStatement stmt = ConnectionFactory.getConnection().prepareStatement("UPDATE endereco SET rua=?, numero=?, complemento=?, bairro=?, cidade=?, estado=?, cep=?, cpfpaciente =? WHERE cod_paciente= ?");
+		
+		for (Endereco endereco : paciente.getEnderecos()) {
+			
+			
+			
+			stmt.setString(1, endereco.getRua());
+			stmt.setString(2, endereco.getNumero());
+			stmt.setString(3, endereco.getComplemento());
+			stmt.setString(4, endereco.getBairro());
+			stmt.setString(5, endereco.getCidade());
+			stmt.setString(6, endereco.getEstado());
+			stmt.setString(7, endereco.getCep());
+			stmt.setString(8, paciente.getCpf());
+			stmt.setInt(9, paciente.getCodigo());
+			
+			
+			stmt.execute();
+			
+		}
+	
+		stmt.close();
+		
+		System.out.println("alterado");*/
+
+	}
+}

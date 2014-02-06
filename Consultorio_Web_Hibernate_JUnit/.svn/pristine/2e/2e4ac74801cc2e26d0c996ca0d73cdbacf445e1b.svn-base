@@ -1,0 +1,331 @@
+package control;
+
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import modelo.Consulta;
+import modelo.Endereco;
+import modelo.NomePlano;
+import modelo.Paciente;
+import modelo.Plano;
+import modelo.Telefone;
+import modelo.TipoTelefone;
+import modelo.dao.ConsultorioService;
+
+public class PacienteController extends MyDispatch {
+	
+	public void pegarDados(Paciente paciente, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		try {
+			paciente.setNome(request.getParameter("nomePaciente"));
+			paciente.setCpf(request.getParameter("cpf").replaceAll("\\.|-", ""));
+			paciente.setEmail(request.getParameter("email"));
+			String nascPaciente = request.getParameter("dataNascimento");
+			//retorna a data convertida do jsp para o bean
+			paciente.setDataNascimento(ConsultorioService.SDF_CADASTRO.parse(nascPaciente));
+
+			// Telefone
+			String[] numeroTelefones = request.getParameterValues("numeroTel");
+			String[] tipoTelefones = request.getParameterValues("tipoTel");
+			
+			paciente.getTelefones().clear();
+
+			for (int i = 0; i < tipoTelefones.length; i++) {
+
+				Telefone telefone = new Telefone();
+				telefone.setNumero(numeroTelefones[i]);
+				telefone.setTipo(TipoTelefone.valueOf(tipoTelefones[i].toUpperCase()));
+				paciente.getTelefones().add(telefone);
+			}
+
+			
+
+			// Plano
+			String[] nomePlanos = request.getParameterValues("nomePlano");
+			String[] dataPlanos = request.getParameterValues("dataValidade");
+			
+			paciente.getPlanos().clear();
+			for (int i = 0; i < dataPlanos.length; i++) {
+
+				if (!"".equals(nomePlanos[i])) {
+
+					Plano plano = new Plano();
+					plano.setPaciente(paciente);
+					plano.setNome(NomePlano.valueOf(nomePlanos[i].toUpperCase().trim()));
+					plano.setDataValidade(ConsultorioService.SDF_PLANO.parse(dataPlanos[i]));
+					paciente.getPlanos().add(plano);
+				}
+			}
+
+			// Endereco
+			Endereco endereco = new Endereco();
+			endereco.setEstado(request.getParameter("estado"));
+			endereco.setCidade(request.getParameter("cidade"));
+			endereco.setBairro(request.getParameter("bairro"));
+			endereco.setRua(request.getParameter("rua"));
+			endereco.setNumero(request.getParameter("numero"));
+			endereco.setComplemento(request.getParameter("complemento"));
+			endereco.setCep(request.getParameter("cep"));
+
+			
+			paciente.setEndereco(endereco);
+			
+			//return paciente;
+		}catch (Exception e) {
+			request.setAttribute("mensagem", "Problemas com os dados informados : " + e.getMessage());
+			throw e;
+		}
+	}
+
+	public void cadastrar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		 request.getAttribute("connection");		
+		try{
+		// dados pessoais do paciente
+			
+			Paciente paciente = new Paciente(); 
+			pegarDados(paciente, request, response);
+			
+			
+			ConsultorioService.getInstance().cadastrar(paciente);
+
+			request.setAttribute("paciente", paciente);
+			request.getRequestDispatcher("paciente-cadastrado.jsp").forward(
+					request, response);
+
+		} catch (ParseException e) {
+
+			request.setAttribute("mensagem",
+					"Data inválida : " + e.getMessage());
+			e.printStackTrace();
+			request.getRequestDispatcher("erro.jsp").forward(request, response);
+		}
+
+		catch (Exception e) {
+			request.setAttribute("mensagem",
+					"Problemas com os dados informados : " + e.getMessage());
+			e.printStackTrace();
+			request.getRequestDispatcher("erro.jsp").forward(request, response);
+		}
+		
+	}
+
+	public void alterar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		//Paciente paciente = ConsultorioService.getInstance().consultarPaciente(request.getParameter("codigo"));
+
+		Paciente paciente = new Paciente();
+		try {
+			paciente.setCodigo(Long.valueOf(request.getParameter("codigo")));
+			pegarDados(paciente, request, response);
+			
+			/*paciente.setNome(request.getParameter("nomePaciente"));
+			paciente.setCpf(request.getParameter("cpf").replaceAll("\\.|-", ""));
+			paciente.setEmail(request.getParameter("email"));
+			paciente.setCodigo(Long.valueOf(request.getParameter("codigo")));
+			String nascPaciente = request.getParameter("dataNascimento");
+
+			//Calendar calendar = Calendar.getInstance();
+			Date data = null;
+
+			data = Singleton.SDF_CADASTRO.parse(nascPaciente);
+
+			//calendar.setTime(data);
+
+			paciente.setDataNascimento(data);
+
+			String[] numeroTelefones = request.getParameterValues("numeroTel");
+			String[] tipoTelefones = request.getParameterValues("tipoTel");
+
+			List<Telefone> telefones = paciente.getTelefones();
+
+			for (int i = 0; i < tipoTelefones.length; i++) {
+
+				Telefone telefone = new Telefone();
+				telefone.setNumero(numeroTelefones[i]);
+				telefone.setTipo(TipoTelefone.valueOf(tipoTelefones[i].toUpperCase().replaceAll(" ", "")));
+				telefones.add(telefone);
+			}
+
+			paciente.setTelefones(telefones);
+
+			String[] nomePlanos = request.getParameterValues("nomePlano");
+			String[] dataPlanos = request.getParameterValues("dataValidade");
+
+			//DateTimeFormatter fmt = DateTimeFormat.forPattern("MM/yyyy");
+			//SimpleDateFormat sdf = new SimpleDateFormat("MM/yyyy");
+			List<Plano> planos = paciente.getPlanos();
+
+			for (int i = 0; i < dataPlanos.length; i++) {
+
+				Plano plano = new Plano();
+				plano.setNome(NomePlano.valueOf(nomePlanos[i].toUpperCase().replaceAll(" ", "")));
+				plano.setDataValidade((Singleton.SDF_PLANO.parse(dataPlanos[i])));
+				planos.add(plano);
+			}
+
+			paciente.setPlanos(planos);
+
+			Endereco endereco = new Endereco();
+			endereco.setEstado(request.getParameter("estado"));
+			endereco.setCidade(request.getParameter("cidade"));
+			endereco.setBairro(request.getParameter("bairro"));
+			endereco.setRua(request.getParameter("rua"));
+			endereco.setNumero(request.getParameter("numero"));
+			endereco.setComplemento(request.getParameter("complemento"));
+			endereco.setCep(request.getParameter("cep"));
+
+			paciente.setEndereco(endereco);*/
+			
+			Consulta consulta = new Consulta();
+			
+			String teste = request.getParameter("cod_consulta");
+			System.out.println(teste);
+			
+			
+			if (request.getParameter("cod_consulta").equals("sem")) {
+				consulta.setCodigo(Long.parseLong(request.getParameter("cod_consultahidden")));
+
+				consulta.setDataConsulta(ConsultorioService.SDF.parse(request.getParameter("dataConsultahidden")));
+				ConsultorioService.getInstance().desmarcarConsulta(consulta);
+			}
+			ConsultorioService.getInstance().alterar(paciente);
+			request.setAttribute("paciente", paciente);
+			request.getRequestDispatcher("paciente-alterado.jsp").forward(	request, response);
+
+		} catch (ParseException e) {
+
+			request.setAttribute("mensagem",
+					"Data inválida : " + e.getMessage());
+			e.printStackTrace();
+			request.getRequestDispatcher("erro.jsp").forward(request, response);
+		}
+
+		catch (Exception e) {
+			request.setAttribute("mensagem",
+					"Problemas com os dados informados : " + e.getMessage());
+			e.printStackTrace();
+			request.getRequestDispatcher("erro.jsp").forward(request, response);
+		}
+	}
+
+	public void excluir(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException {
+
+		try {
+			String cpf = request.getParameter("cpf").replaceAll("\\.|-", "");
+			Paciente paciente = new Paciente();
+			paciente.setCpf(cpf);
+
+			paciente = ConsultorioService.getInstance().recuperarPacientePorCpf(cpf);
+
+			ConsultorioService.getInstance().excluir(paciente);
+			request.setAttribute("paciente", paciente);
+			request.getRequestDispatcher("/paciente-excluido.jsp").forward(
+					request, response);
+
+		} catch (Exception e) {
+
+			request.setAttribute("mensagem",
+					"Problemas com os dados informados : " + e.getMessage());
+			e.printStackTrace();
+			request.getRequestDispatcher("erro.jsp").forward(request, response);
+		}
+		
+
+	}
+	
+	public void lista(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		try{
+			Paciente paciente = new Paciente();
+			String cpf = request.getParameter("cpfBusca").replaceAll("\\.|-", "");
+			paciente = ConsultorioService.getInstance().recuperarPacientePorCpf(cpf);
+		
+			if (paciente == null) {
+
+				request.setAttribute("mensagem", "Paciente n&atilde;o encontrado!");
+				request.getRequestDispatcher("lista-paciente.jsp").forward(request, response);
+				
+
+			} else {
+				
+			paciente.setTelefones(ConsultorioService.getInstance().getTelefones(paciente));
+			paciente.setPlanos(ConsultorioService.getInstance().getPlanos(paciente));
+				
+			//Pesquisar Consulta
+				
+			Consulta consulta = new Consulta();
+				
+			//	if (!paciente.getConsultas().isEmpty()) {
+			paciente.setConsultas(ConsultorioService.getInstance().getConsultas(paciente));	
+			//consulta = (Consulta) Singleton.getInstance().getConsultas(paciente);
+			if (!paciente.getConsultas().isEmpty()) {
+			consulta = paciente.getConsultas().get(paciente.getConsultas().size()-1);
+					
+					Calendar calendar = Calendar.getInstance();
+					Date dataf = new Date(consulta.getDataConsulta().getTime());
+					calendar.setTime(dataf);
+					
+					String datae = ConsultorioService.SDF.format(dataf);
+					
+				//	if (calendar.after(Calendar.getInstance())) {
+						
+						request.setAttribute("data", datae);
+						request.setAttribute("consulta", consulta);
+					}
+			//	}
+				
+				
+				
+				request.setAttribute("paciente", paciente);
+				request.setAttribute("validade",new ListaDataConsulta().getDataPlano(paciente));
+
+				//Singleton.getInstance().removeDataDiaAnterior();
+				request.getRequestDispatcher("paciente-listado.jsp").forward(
+						request, response);
+				}
+			
+		} catch (Exception e) {
+			request.setAttribute("mensagem","Problemas com os dados informados : " + e.getMessage());
+			e.printStackTrace();
+			request.getRequestDispatcher("erro.jsp").forward(request, response);
+		}
+	}
+	
+	public void listaNome(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		try{
+
+		List<Paciente> listaPaciente = ConsultorioService.getInstance().listaPacienteNome(request.getParameter("nome"));
+
+			if (listaPaciente.isEmpty()) {
+
+				request.setAttribute("mensagem", "Paciente n&atilde;o encontrado!");
+				request.getRequestDispatcher("lista-paciente.jsp").forward(request, response);
+				
+
+			} else {
+
+				request.setAttribute("paciente", listaPaciente);
+				
+				//Singleton.getInstance().removeDataDiaAnterior();
+				request.getRequestDispatcher("ResultadoBuscaPorNome.jsp").forward(
+						request, response);
+
+			}
+		} catch (Exception e) {
+			request.setAttribute("mensagem","Problemas com os dados informados : " + e.getMessage());
+			e.printStackTrace();
+			request.getRequestDispatcher("erro.jsp").forward(request, response);
+		}
+	}
+
+
+}

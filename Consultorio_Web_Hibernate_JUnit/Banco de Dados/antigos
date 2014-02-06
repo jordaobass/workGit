@@ -1,0 +1,36 @@
+
+		List<Telefone> telefonesAntigos = Singleton.getInstance().getTelefonesCodigo(paciente);
+		
+
+		
+			
+			if (telefonesAntigos.size() < paciente.getTelefones().size()) {
+
+				Statement stmt = ConnectionFactory.getConnection()
+						.createStatement();
+
+				stmt.executeUpdate("DELETE FROM telefone WHERE cod_paciente = "
+						+ paciente.getCodigo());
+				stmt.close();
+				
+				Singleton.getInstance().cadastrarTelefone(paciente);
+			}
+//			int i = 0;
+//			for (Telefone telefone : paciente.getTelefones()) {
+//
+//				Telefone telefoneAntigo = telefonesAntigos.get(i);
+//				
+//				if (!telefoneAntigo.getNumero().equals(telefone.getNumero()) || !telefoneAntigo.getTipo().equals(telefone.getTipo())) {
+//					
+//					stmt.setString(1, telefone.getNumero());
+//					stmt.setString(2, telefone.getTipo().getLabel());
+//					stmt.setString(3, telefoneAntigo.getNumero());
+//					
+//					stmt.execute();
+//					System.out.println("alterado");
+//				}
+//				i++;
+//			}
+//		
+//
+//		stmt.close();

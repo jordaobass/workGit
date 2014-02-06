@@ -1,0 +1,80 @@
+package modelo;
+
+
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+
+import org.joda.time.DateTime;
+
+
+@Entity
+@Table(name="plano")
+public class Plano{
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name="nome")
+	private NomePlano nome;
+	
+	@Column(name="datavalidade")
+	private Date dataValidade;
+	
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinTable(name = "plano_paciente", joinColumns={@JoinColumn(name="cod_plano")}, inverseJoinColumns={@JoinColumn(name="cod_paciente")})
+	private List<Paciente> pacientes;
+	
+	public Long getId() {
+		return id;
+	}
+	
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
+	public NomePlano getNome() {
+		return nome;
+	}
+	
+	public void setNome(NomePlano nome) {
+		this.nome = nome;
+	}
+	
+	public Date getDataValidade() {
+		return dataValidade;
+	}
+	
+	/*public Date getDataValidadeDate(){
+		return dataValidade.toDate();
+	}*/
+	
+	public void setDataValidade(Date dataValidade) {
+		this.dataValidade = dataValidade;
+	}
+	
+	public List<Paciente> getPaciente() {
+		return pacientes;
+	}
+	
+	public void setPaciente(List<Paciente> pacientes) {
+		this.pacientes = pacientes;
+	}
+	
+	
+}

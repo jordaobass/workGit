@@ -1,0 +1,74 @@
+CREATE TABLE paciente
+(
+  cod_paciente serial NOT NULL,
+  cpf character varying NOT NULL,
+  nome character varying NOT NULL,
+  datanasc date,
+  email character varying,
+  CONSTRAINT paciente_pkey PRIMARY KEY (cod_paciente )
+)
+
+ALTER TABLE paciente ADD CONSTRAINT cpf UNIQUE (cpf);
+
+CREATE TABLE endereco
+(
+  cod_paciente integer NOT NULL,
+  cidade character varying(30) NOT NULL,
+  estado character varying(30) NOT NULL,
+  bairro character varying(30) NOT NULL,
+  rua character varying(30) NOT NULL,
+  numero character varying(20),
+  complemento character varying(30),
+  cpfpaciente character varying(18) NOT NULL,
+  cep character varying(12) NOT NULL,
+
+  CONSTRAINT endereco_cod_paciente_fkey FOREIGN KEY (cod_paciente)
+      REFERENCES paciente (cod_paciente) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE CASCADE
+)
+
+CREATE TABLE plano
+(
+  cod_paciente integer NOT NULL,
+  cpfpaciente character varying(18) NOT NULL,
+  nome character varying(255) NOT NULL,
+  datavalidade date NOT NULL,
+
+  CONSTRAINT plano_cod_paciente_fkey FOREIGN KEY (cod_paciente)
+      REFERENCES paciente (cod_paciente) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE CASCADE      
+)
+
+CREATE TABLE telefone
+(
+  cod_paciente integer NOT NULL,
+  cpfpaciente character varying(18) NOT NULL,
+  tipotelefone character varying,
+  numero character varying(30) NOT NULL,
+
+  CONSTRAINT telefone_cod_paciente_fkey FOREIGN KEY (cod_paciente)
+      REFERENCES paciente (cod_paciente) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE CASCADE
+)
+
+CREATE TABLE consulta
+(
+  data timestamp without time zone,
+  cpfpaciente character varying(18) NOT NULL,
+  nomepaciente character varying(30) NOT NULL,
+  tipoconsulta character varying(30)
+  cod_consulta serial not null,
+  cod_paciente integer not null,
+  
+   CONSTRAINT consulta_pkey PRIMARY KEY (cod_consulta )
+  	CONSTRAINT consulta_cod_paciente_fkey FOREIGN KEY (cod_paciente)
+      REFERENCES paciente (cod_paciente) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE CASCADE
+)
+
+CREATE TABLE data
+(
+  id_data serial NOT NULL,
+  datadisponivel timestamp without time zone,
+  CONSTRAINT data_pkey PRIMARY KEY (id_data)
+)

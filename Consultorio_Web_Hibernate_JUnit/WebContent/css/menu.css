@@ -1,0 +1,34 @@
+#submenu {
+	width: 200px;
+	margin: 10px;
+
+}
+	
+#submenu  li a {
+	height: 32px;
+  	voice-family: "\"}\""; 
+  	voice-family: inherit;
+  	height: 47px;
+	text-decoration: none;
+	text-align: left;
+}	
+	
+#submenu  li a:link, #submenu  li a:visited {
+	color: gray;
+	display: block;
+	background:  url(menu5.gif);
+	padding: 8px 0 0 10px;
+}
+	
+#submenu  li a:hover {
+	color: white;
+	background:  url(menu5.gif) 0 -32px;
+	padding: 8px 0 0 10px;
+	border: 1px solid gray;
+	background-color: gray;
+}
+#submenu ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}

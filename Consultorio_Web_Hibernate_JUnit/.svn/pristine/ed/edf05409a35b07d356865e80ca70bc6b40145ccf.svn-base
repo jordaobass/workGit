@@ -1,0 +1,31 @@
+package modelo.DAO;
+
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+public class PacienteDAOTest {
+	private PacienteDAO dao;
+
+	@Before
+	public void init() {
+		dao = new PacienteDAO();
+	}
+
+	@After
+	public void finish() {
+	}
+
+	@Test
+	public void cadastrarPaciente() {
+
+		try {
+			dao.cadastrar(null);
+		} catch (Exception e) {
+			Assert.fail(e.getMessage());
+		}
+
+	}
+
+}

@@ -1,0 +1,33 @@
+<jsp:include page="header.jsp">
+	<jsp:param value="Tela de apresentação da busca por nomes" name=""/>
+</jsp:include>
+
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
+<div id="container">
+	<table border="1"class="resultadoTabela" cellpadding="9">
+		<thead align="center">
+		<tr>
+			<td>Nome</td>
+			<td>Cpf</td>
+			<td>Email</td>
+		</tr>
+		</thead>
+		<c:forEach var="paciente" items="${paciente}" varStatus="id">
+			<tr bgcolor="${id.count % 2 == 1 ? 'silver' : 'white'}">
+				<td>${paciente.nome}</td>
+				<td>${paciente.cpf}</td>
+				<td>${paciente.email}</td>
+			</tr>		
+		</c:forEach>		
+	</table>
+		
+		<ul class="button blue" id="listaPacienteLink">
+			<li>
+				<a href="lista-paciente.jsp" style="color: white;" >V&aacute; para a p&aacute;gina de busca</a>
+			</li>
+		</ul>	
+
+</div>
+	
+<jsp:include page="footer.jsp"/>

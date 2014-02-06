@@ -1,0 +1,257 @@
+package modelo.dao;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Query;
+
+import modelo.Consulta;
+import modelo.Data;
+import modelo.Paciente;
+
+public class ConsultaDAO extends ConnectionFactory {
+
+	public void removeDataDiaAnterior() throws Exception {
+
+		try {
+
+			manager.getTransaction().begin();
+			Date dataHoje = new Date();
+			Timestamp td = new Timestamp(dataHoje.getTime());
+
+			Query query = manager
+					.createQuery("delete  from data  where datadisponivel < '"
+							+ td + "';");
+			query.executeUpdate();
+			manager.getTransaction().commit();
+		
+		}  catch (Exception e) {
+			manager.getTransaction().rollback();
+			throw e;
+
+		} finally {
+
+			ConnectionFactory.getConnection().close();
+		}
+
+	}
+
+	public void removeData(Date data) throws Exception {
+
+		try {
+
+			Query query = manager
+					.createQuery("delete  from data  where datadisponivel = '"
+							+ data + "';");
+			query.executeUpdate();
+
+			System.out.println("removeu a data");
+
+		} catch (Exception e) {
+
+			throw e;
+		} finally {
+
+			ConnectionFactory.getConnection().close();
+			manager.getTransaction().rollback();
+			
+		}
+	}
+
+	public void cadastrarConsulta(Consulta consulta, Paciente paciente)throws Exception {
+
+		try {
+
+			manager.getTransaction().begin();
+			consulta.setCodigo(paciente.getCodigo());
+			manager.getTransaction().begin(); 
+			manager.persist(consulta);
+			manager.getTransaction().commit();
+			
+			manager.getTransaction().commit();
+			System.out.println("consulta agendada!");
+		}  catch (Exception e) {
+			manager.getTransaction().rollback();
+			throw e;
+		}
+	}
+
+	public Data ultimaData() throws Exception {
+	
+		//manager.getTransaction().begin();
+		// PreparedStatement ps =
+		// ConnectionFactory.getConnection().prepareStatement("select datadisponivel from data order by datadisponivel desc limit 1");
+		Query query = manager
+				.createQuery("select d from Data d order by d.dataDisponivel desc limit 1");
+		 
+		return  (Data) query.getSingleResult();
+
+	}
+
+	public Consulta verificarConsulta(Consulta consulta) throws Exception {
+
+		Consulta consultaEncontrada = new Consulta();
+		try {
+
+			// consultaEncontrada = (Consulta) session.load(Consulta.class,
+			// consulta.getCodigo());
+			manager.find(Consulta.class, consulta.getCodigo());
+
+			/*
+			 * Statement stmt =
+			 * ConnectionFactory.getConnection().createStatement();
+			 * 
+			 * 
+			 * ResultSet rs =
+			 * stmt.executeQuery("select * from consulta where data = '"+
+			 * consulta.getDataConsulta() + "'");
+			 * 
+			 * while (rs.next()) {
+			 * 
+			 * consulta.setDataConsulta(null);
+			 * 
+			 * } rs.close(); stmt.close();
+			 */
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception("Ocorreu um erro ao verificar a consulta", e);
+
+		} finally {
+
+			ConnectionFactory.getConnection().close();
+		}
+
+		return consultaEncontrada;
+	}
+
+	public void cadastrarDataDisponivelAgendada(List<Date> datas) throws Exception		{
+
+	
+		
+		try {
+			manager.getTransaction().begin();
+					
+			for (Date date : datas) {
+			
+				Data d = new Data();
+				d.setDataDisponivel(date);
+				manager.persist(d);
+			}
+			
+			manager.getTransaction().commit();
+
+
+		} catch (Exception e) {
+
+			manager.getTransaction().rollback();
+				throw new Exception("Ocorreu um erro ao cadastrar a data disponivel agendada", e);
+			
+		
+		}
+	}
+
+	public List<Date> getLista()
+			throws Exception {
+
+	
+			Query query = manager
+					.createQuery("select d from Data d order by d.dataDisponivel");
+			List<Date> listaDataDisponiveis = new ArrayList<Date>();
+			listaDataDisponiveis = query.getResultList();
+
+			/*
+			 * Statement stmt =
+			 * ConnectionFactory.getConnection().createStatement();
+			 * 
+			 * ResultSet rs =
+			 * stmt.executeQuery("select * from data order by datadisponivel");
+			 * 
+			 * while (rs.next()) {
+			 * listaDataDisponiveis.add(rs.getTimestamp("datadisponivel")); }
+			 * 
+			 * rs.close(); stmt.close();
+			 */
+
+	
+
+		return listaDataDisponiveis;
+	}
+
+	public void DesmarcarConsulta(Consulta consulta) throws SQLException {
+
+		try {
+
+			// session.delete(consulta);
+
+			manager.detach(consulta);
+
+			/*
+			 * Statement stmt =
+			 * ConnectionFactory.getConnection().createStatement();
+			 * 
+			 * stmt.executeUpdate("DELETE FROM consulta WHERE cod_consulta = "+
+			 * consulta.getCodigo());
+			 * 
+			 * stmt.close();
+			 */
+
+			// Statement stmt2 =
+			// ConnectionFactory.getConnection().createStatement();
+
+			// stmt2.execute("INSERT INTO data (datadisponivel) VALUES ('"+consulta.getDataConsulta()+"')");
+
+			// stmt2.close();
+
+		} finally {
+			// ConnectionFactory.getConnection().close();
+		}
+
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Consulta> getConsultas(Paciente paciente) throws Exception {
+
+		try {
+
+			// Query query =
+			// manager.createQuery("SELECT * FROM consulta WHERE cod_paciente = "+paciente.getCodigo()+
+			// " order by data desc limit 1");
+			Query query = manager
+					.createQuery("SELECT c FROM Consulta c WHERE FK_P = "
+							+ paciente.getCodigo()
+							+ " order by data desc limit 1");
+			List<Consulta> consultas = query.getResultList();
+
+			/*
+			 * PreparedStatement ps =
+			 * ConnectionFactory.getConnection().prepareStatement
+			 * ("SELECT * FROM consulta WHERE cod_paciente = "
+			 * +paciente.getCodigo()+ " order by data desc limit 1"); ResultSet
+			 * rs = ps.executeQuery();
+			 * 
+			 * List<Consulta> consultas = new ArrayList<Consulta>();
+			 * 
+			 * if (rs.next()) {
+			 * 
+			 * Consulta consulta = new Consulta();
+			 * consulta.setCodigo(rs.getInt("cod_consulta"));
+			 * consulta.setDataConsulta(new
+			 * Timestamp(rs.getTimestamp("data").getTime()));
+			 * consultas.add(consulta); }
+			 */
+
+			return consultas;
+		} catch (Exception e) {
+
+			throw new Exception("Ocorreu algum erro", e);
+
+		} finally {
+
+			// ConnectionFactory.getConnection().close();
+		}
+
+	}
+}

@@ -1,0 +1,148 @@
+package modelo.DAO;
+
+//import java.sql.PreparedStatement;
+//import java.sql.ResultSet;
+import java.sql.SQLException;
+//import java.sql.Statement;
+//import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.Query;
+
+//import modelo.Endereco;
+import modelo.Paciente;
+import modelo.Singleton;
+import modelo.Telefone;
+//import modelo.Telefone.TipoTelefone;
+
+public class TelefoneDAO extends ConnectionFactory{
+
+	public void cadastrarTelefone(Paciente paciente) throws SQLException {
+		
+		/*List<Telefone> telefones = new ArrayList();
+		telefones = paciente.getTelefones();*/
+		
+		/*for (Telefone telefone : paciente.getTelefones()) {
+			manager.persist(telefone);
+			}*/
+		
+		
+		/*PreparedStatement stmt = ConnectionFactory.getConnection().prepareStatement("INSERT INTO telefone(numero,tipotelefone,cpfpaciente,cod_paciente) VALUES(?,?,?,?)");;
+
+		for (Telefone telefone : paciente.getTelefones()) {
+
+			if (!telefone.getNumero().equals("") || !telefone.getTipo().equals("")) {
+				
+				stmt.setString(1, telefone.getNumero());
+				stmt.setString(2, telefone.getTipo().getLabel());
+				stmt.setString(3, paciente.getCpf());
+				stmt.setInt(4, paciente.getCodigo());
+				stmt.addBatch();
+				stmt.execute();
+			}
+		
+		}
+		
+		stmt.close();*/
+	}
+
+	public List<Telefone> getTelefones(Paciente paciente) throws SQLException {
+
+		Query query = manager.createQuery("SELECT * FROM telefone WHERE cpfpaciente = '" + paciente.getCpf() + "'");
+		List<Telefone> listaTelefones = query.getResultList();
+		
+		/*Statement stmt = ConnectionFactory.getConnection().createStatement();
+
+		ResultSet rs = stmt.executeQuery("SELECT * FROM telefone WHERE cpfpaciente = '" + paciente.getCpf() + "'");
+		
+		List<Telefone> telefones = new ArrayList<Telefone>(); 
+
+
+		while (rs.next()) {
+
+			Telefone telefone = new Telefone();
+			telefone.setNumero(rs.getString("numero"));
+			telefone.setTipo(TipoTelefone.valueOf(rs.getString("tipotelefone").toUpperCase()));
+			telefones.add(telefone);
+		}
+
+		rs.close();
+		stmt.close();*/
+		
+		return listaTelefones;
+	}
+	
+	public List<Telefone> getTelefonesCodigo(Paciente paciente) throws SQLException {
+
+		Query query = manager.createQuery("ELECT * FROM telefone WHERE cod_paciente = '" + paciente.getCodigo() + "'");
+		List<Telefone> listaTelefones = query.getResultList();
+		
+		/*Statement stmt = ConnectionFactory.getConnection().createStatement();
+
+		ResultSet rs = stmt.executeQuery("SELECT * FROM telefone WHERE cod_paciente = '" + paciente.getCodigo() + "'");
+		
+		List<Telefone> telefones = new ArrayList<Telefone>(); 
+
+
+		while (rs.next()) {
+
+			Telefone telefone = new Telefone();
+			telefone.setNumero(rs.getString("numero"));
+			telefone.setTipo(TipoTelefone.valueOf(rs.getString("tipotelefone").toUpperCase()));
+			telefones.add(telefone);
+		}
+
+		rs.close();
+		stmt.close();*/
+		
+		return listaTelefones;
+	}
+
+	public void alteraTelefone(Paciente paciente) throws Exception {
+
+		
+		
+		//List<Telefone> telefonesAntigos = Singleton.getInstance().getTelefonesCodigo(paciente);
+			
+	/*	
+		for (Telefone telefone : paciente.getTelefones()) {
+			
+			if (telefone.getNumero().equals("") || telefone.getTipo().equals("")) {
+				
+				throw new Exception("Não é possível cadastrar um telefone vazio");
+			}
+		}*/
+		
+			/*if (telefonesAntigos.size() <= paciente.getTelefones().size()) {	
+				
+				manager.remove(telefonesAntigos);
+				
+				Statement stmt = ConnectionFactory.getConnection()
+						.createStatement();
+
+				stmt.executeUpdate("DELETE FROM telefone WHERE cod_paciente = "
+						+ paciente.getCodigo());
+				stmt.close();
+				
+				Singleton.getInstance().cadastrarTelefone(paciente);
+				
+			
+		}
+			
+			if (telefonesAntigos.size() >= paciente.getTelefones().size()) {
+
+				manager.remove(telefonesAntigos);
+				
+				Statement stmt = ConnectionFactory.getConnection()
+						.createStatement();
+
+				stmt.executeUpdate("DELETE FROM telefone WHERE cod_paciente = "
+						+ paciente.getCodigo());
+				stmt.close();
+				
+				Singleton.getInstance().cadastrarTelefone(paciente);
+		}*/
+
+	}
+
+}

@@ -1,0 +1,10 @@
+package excecao;
+
+public class VerificarConsultaException extends Exception{
+
+	@Override
+	public String toString() {
+		return "Ocorreu um erro ao verificar a consulta!";
+	}
+
+}

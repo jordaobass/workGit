@@ -1,0 +1,41 @@
+package modelo;
+
+import java.util.Calendar;
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+@Entity
+@Table(name="data")
+public class Data {
+	
+	@Id
+	@GeneratedValue
+	private Long id;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="data_disponivel")
+	private Date dataDisponivel;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Date getDataDisponivel() {
+		return dataDisponivel;
+	}
+
+	public void setDataDisponivel(Date dataDisponivel) {
+		this.dataDisponivel = dataDisponivel;
+	}
+}

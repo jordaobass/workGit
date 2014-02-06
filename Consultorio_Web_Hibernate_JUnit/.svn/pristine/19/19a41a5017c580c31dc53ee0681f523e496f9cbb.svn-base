@@ -1,0 +1,62 @@
+package modelo.dao;
+
+import modelo.Endereco;
+import modelo.Paciente;
+import modelo.Plano;
+import modelo.Plano.NomePlano;
+
+import org.joda.time.DateTime;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+public class PlanoDAOTest {
+
+	private static PlanoDAO dao;
+	private static PacienteDAO pacientedao;
+	
+	@BeforeClass
+	public static void init(){
+		dao = new PlanoDAO();
+		pacientedao = new PacienteDAO();
+	}
+	
+	@AfterClass
+	public static void finish(){
+		dao.close();
+		pacientedao.close();
+	}
+	
+	@Test
+	public void cadastrarUmPlano(){
+		
+		try {
+			Paciente paciente = new Paciente();
+			paciente.setCpf("52280328860");
+			paciente.setNome("Homem Teste Telefone");
+			
+			paciente.setEndereco(new Endereco());
+			paciente.getEndereco().setCep("03355010");
+			
+			pacientedao.cadastrar(paciente);
+			
+			Plano plano = new Plano();
+			
+			plano.setId(1L);
+			plano.setDataValidade(new DateTime().toDateTime());
+			plano.setNome(NomePlano.AMIL);
+			dao.cadastrar(plano);
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		}
+		
+		
+		
+	}
+	
+	
+}

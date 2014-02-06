@@ -1,0 +1,98 @@
+package modelo.dao;
+
+import infra.PacienteFactory;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import modelo.Consulta;
+
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+public class ConsultaDAOTest {
+
+	private static ConsultaDAO dao;
+	private static PacienteFactory factory;
+	private static PacienteDAO daoPaciente;
+
+	@BeforeClass
+	public static void init() {
+		dao = new ConsultaDAO();
+		daoPaciente = new PacienteDAO();
+		factory = new PacienteFactory();
+	}
+
+	@AfterClass
+	public static void finish() {
+		dao.close();
+	}
+	
+	@Test
+	public void getData() {
+		gerarData();
+	}
+
+	
+	private void gerarData() {
+
+		List<Date> aux = new ArrayList<Date>();
+		Consulta consulta = new Consulta();
+		Calendar dataCalendar = Calendar.getInstance();
+		Date date = new Date();
+
+		try {
+			for (int i = 0; i < 2; i++) {
+
+				dataCalendar.add(Calendar.DAY_OF_MONTH, 1);
+				dataCalendar.set(Calendar.HOUR_OF_DAY, 8);
+				dataCalendar.set(Calendar.MINUTE, 0);
+				dataCalendar.set(Calendar.SECOND, 0);
+
+				for (int j = 0; j < 6; j++) {
+
+					dataCalendar.add(Calendar.HOUR_OF_DAY, 1);
+
+					String dataFormatada = Singleton.SDF.format(dataCalendar.getTime());
+
+					date = Singleton.SDF.parse(dataFormatada);
+
+					aux.add(date);
+
+				}
+			}
+			consulta.setListaDataDisponivel(aux);
+
+			Singleton.getInstance().cadastrarDataDisponivelAgendada(consulta.getListaDataDisponivel());
+
+			Assert.assertNotNull(Singleton.getInstance().getLista());
+			Assert.assertEquals(Singleton.getInstance().getLista().size(), consulta.getListaDataDisponivel().size());
+
+		} catch (Exception e) {
+
+			System.out.println(e.getMessage());
+			Assert.fail(e.getMessage());
+		}
+
+	}
+
+	@Test
+	public void verificarUltimaData() {
+		gerarData();
+		
+		List<Date> c = new ArrayList<Date>();
+		try {
+			c.add(Singleton.getInstance().ultimaData().getDataDisponivel());
+			Assert.assertEquals(c.size(), 1);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		}
+
+	}
+
+}

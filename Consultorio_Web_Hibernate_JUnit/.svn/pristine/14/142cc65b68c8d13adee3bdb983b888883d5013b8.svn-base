@@ -1,0 +1,72 @@
+package modelo.dao;
+
+import infra.PacienteFactory;
+
+import java.util.Date;
+
+import modelo.Consulta;
+import modelo.Paciente;
+
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+public class ConsultaDAOTest {
+
+	private static ConsultaDAO dao;
+	private static PacienteFactory factory;
+	@BeforeClass
+	public static void init() {
+		dao = new ConsultaDAO();
+		factory = new PacienteFactory();
+	}
+
+	@AfterClass
+	public static void finish() {
+		dao.close();
+	}
+
+	@Test
+	public void cadastrarUmaConsulta() {
+
+		try {
+		
+
+			Consulta consulta = new Consulta();
+			consulta.setDataConsulta(new Date());
+			
+			Paciente paciente = factory.criaPacientes(1);
+			consulta.setPaciente(factory.criaPacientes(1));
+			consulta.setTipoConsulta("Particular");
+
+			dao.cadastrarConsulta(consulta, paciente);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		}
+
+	}
+	
+	@Test
+	public void listarConsultas(){
+		try {
+			Paciente paciente = new Paciente();
+			paciente.setCpf("12613515090");
+			paciente.setNome("Homem Teste");
+
+			Consulta consulta = new Consulta();
+			consulta.setDataConsulta(new Date());
+			consulta.setPaciente(paciente);
+			consulta.setTipoConsulta("Particular");
+			dao.cadastrarConsulta(consulta, paciente);
+			
+			dao.getConsultas(paciente);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		}
+		
+	}
+
+}

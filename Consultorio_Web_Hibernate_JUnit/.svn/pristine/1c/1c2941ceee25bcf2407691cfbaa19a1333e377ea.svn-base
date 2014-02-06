@@ -1,0 +1,151 @@
+package modelo.dao;
+
+import modelo.Endereco;
+import modelo.Paciente;
+import modelo.Telefone;
+import modelo.TipoTelefone;
+
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+public class PacienteDAOTest {
+	
+	private static PacienteDAO dao;
+
+	@BeforeClass
+	public static void init() {
+		dao = new PacienteDAO();
+	}
+	
+	@AfterClass
+	public static void finish() {
+		dao.close();
+	}
+
+	@Test
+	public void cadastrarUmPaciente() {
+
+		try {
+			
+			//primeiro
+			Paciente paciente = new Paciente();
+			paciente.setCpf("12613515090");
+			paciente.setNome("Homem Teste");
+			
+			paciente.setEndereco(new Endereco());
+			paciente.getEndereco().setCep("24220111");
+			
+			dao.cadastrar(paciente);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		}
+	}
+	
+	@Test
+	public void cadastrarDoisPaciente() {
+
+		try {
+			
+			//segundo 
+			Paciente paciente = new Paciente();
+			paciente.setCpf("08100782288");
+			paciente.setNome("Homem Teste Dois");
+			
+			paciente.setEndereco(new Endereco());
+			paciente.getEndereco().setCep("24240070");
+			
+			dao.cadastrar(paciente);
+			
+			//Terceiro
+			paciente = new Paciente();
+			paciente.setCpf("83415221440");
+			paciente.setNome("Homem Teste Três");
+			
+			paciente.setEndereco(new Endereco());
+			paciente.getEndereco().setCep("20770240");
+			
+			dao.cadastrar(paciente);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		}
+
+	}
+	
+
+	@Test
+	public void consultarPaciente() {
+
+		try {
+			Paciente paciente = new Paciente();
+			paciente.setCpf("12613515090");
+			paciente.setNome("Homem Teste");
+
+			paciente.setEndereco(new Endereco());
+			paciente.getEndereco().setCep("24220111");
+
+			Assert.assertEquals(dao.listarTodosPacientes().size(), 3);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		}
+
+	}
+	
+	@Test
+	public void cadastrarTelefone() {
+
+		try {
+			Paciente paciente = new Paciente();
+			paciente.setCpf("52280328860");
+			paciente.setNome("Homem Teste Telefone");
+			
+			paciente.setEndereco(new Endereco());
+			paciente.getEndereco().setCep("03355010");
+			
+			dao.cadastrar(paciente);
+			
+			
+			Telefone novo = new Telefone();
+			novo.setNumero("2188888888");
+			novo.setTipo(TipoTelefone.RESIDENCIAL);
+			paciente.getTelefones().add(novo);
+			
+			dao.alterar(paciente);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		}
+
+	}
+	
+	@Test
+	public void excluirTelefone() {
+
+		try {
+			
+			Paciente paciente = dao.consultarPacientePorCPF("52280328860");
+			Assert.assertNotNull(paciente);
+			
+			Telefone novo = new Telefone();
+			novo.setNumero("2199999999");
+			novo.setTipo(TipoTelefone.CELULAR);
+			
+			paciente.getTelefones().add(novo);
+			
+			dao.alterar(paciente);
+			paciente.getTelefones().remove(0);
+			dao.alterar(paciente);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		}
+
+	}
+
+
+}

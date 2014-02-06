@@ -1,0 +1,66 @@
+package modelo.dao;
+
+//import java.sql.PreparedStatement;
+//import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
+import javax.persistence.Query;
+
+import modelo.Paciente;
+import modelo.Telefone;
+
+public class TelefoneDAO extends ConnectionFactory {
+
+	public void cadastrarTelefone(Paciente paciente) throws SQLException {
+
+		try {
+
+			begin();
+			manager.persist(paciente.getTelefones());
+			commit();
+			close();
+
+		} catch (Exception e) {
+			rollback();
+		}
+
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Telefone> getTelefones(Paciente paciente) throws SQLException {
+
+		begin();
+
+		Query query = manager
+				.createQuery("SELECT * FROM telefone WHERE cpfpaciente = '"
+						+ paciente.getCpf() + "'");
+		List<Telefone> listaTelefones = query.getResultList();
+		commit();
+		close();
+		return listaTelefones;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Telefone> getTelefonesCodigo(Paciente paciente)
+			throws SQLException {
+
+		Query query = manager
+				.createQuery("SELECT t FROM Telefone T WHERE cod_paciente = '"
+						+ paciente.getCodigo() + "'");
+		List<Telefone> listaTelefones = query.getResultList();
+
+		return listaTelefones;
+	}
+
+	public void alteraTelefone(Paciente paciente) throws Exception {
+
+		begin();
+
+		manager.merge(paciente.getTelefones());
+		commit();
+		close();
+
+	}
+
+}

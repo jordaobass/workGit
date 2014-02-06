@@ -1,0 +1,89 @@
+package modelo;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+@Entity
+@Table(name= "telefone")
+public class Telefone {
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="cod_tel")
+	private long codTel;
+	
+	@Column(name="numero")
+	private String numero;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name="tipo_telefone")
+	private TipoTelefone tipo;
+	
+	@ManyToOne(cascade=CascadeType.ALL)
+	@JoinColumn(name="cod_paciente")
+	private Paciente paciente;
+	
+	public enum TipoTelefone {
+		CELULAR("Celular"), RESIDENCIAL("Residencial"), COMERCIAL("Comercial");
+		
+		private String label;
+		
+		private TipoTelefone(String label) {
+			this.label = label;
+		}
+		
+		public String getLabel() {
+			return label;
+		}
+	}
+	
+	/*public String getDdd() {
+		return ddd;
+	}
+
+	public void setDdd(String ddd) {
+		this.ddd = ddd;
+	}*/
+
+	public Paciente getPaciente() {
+		return paciente;
+	}
+
+	public void setPaciente(Paciente paciente) {
+		this.paciente = paciente;
+	}
+
+	public void setCodTel(long codTel) {
+		this.codTel = codTel;
+	}
+	
+	public Long getCodTel() {
+		return codTel;
+	}
+	
+	public String getNumero() {
+		return numero;
+	}
+
+	public void setNumero(String numero) {
+		this.numero = numero;
+	}
+
+	public TipoTelefone getTipo() {
+	
+		return tipo;
+	}
+
+	public void setTipo(TipoTelefone tipo) {
+		this.tipo = tipo;
+	}
+}

@@ -1,0 +1,9 @@
+package excecao;
+
+public class ConsultorioException extends Exception{
+
+	
+	
+	
+	
+}

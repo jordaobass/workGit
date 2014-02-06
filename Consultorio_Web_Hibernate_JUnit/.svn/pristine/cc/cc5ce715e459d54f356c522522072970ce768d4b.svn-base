@@ -1,0 +1,193 @@
+package modelo.dao;
+
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
+import modelo.Consulta;
+import modelo.Data;
+import modelo.Endereco;
+import modelo.Paciente;
+import modelo.Telefone;
+
+
+public class Singleton {
+	
+	private static Singleton SINGLETON;
+	
+	private EntityManagerFactory factory;
+	
+	private PacienteDAO pacienteDAO = new PacienteDAO();
+	private EnderecoDAO enderecoDAO = new EnderecoDAO();
+	private PlanoDAO planoDAO = new PlanoDAO();
+	private TelefoneDAO telefoneDAO = new TelefoneDAO();
+	private ConsultaDAO consultaDAO = new ConsultaDAO();
+	
+	public static SimpleDateFormat SDF = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+	private SimpleDateFormat sdfCadastro = new SimpleDateFormat("dd/MM/yyyy");
+	private SimpleDateFormat sdfPlano = new SimpleDateFormat("MM/yyyy");
+	private Date td;
+			
+	
+	private Singleton() {
+
+		factory = Persistence.createEntityManagerFactory ("Consultorio_Web");
+	}
+
+	public static Singleton getInstance() {
+
+		if (SINGLETON == null) {
+
+			return SINGLETON = new Singleton();
+		}
+		return SINGLETON;
+	}
+
+	public void cadastrarEndereco(Paciente paciente) throws SQLException {
+		
+		enderecoDAO.cadastrarEndereco(paciente);
+	}
+	
+	public void cadastrar(Paciente paciente) throws Exception {
+		
+		pacienteDAO.cadastrar(paciente);
+		
+	}
+	
+//	public List<Plano> getPlanos(Paciente paciente) throws SQLException{
+//		
+//		return planoDAO.getPlanos(paciente);
+//	}
+	
+	public Endereco getEndereco(Paciente paciente) throws SQLException {
+		
+		return enderecoDAO.getEndereco(paciente);
+	}
+	
+	public void cadastrarTelefone(Paciente paciente) throws SQLException {
+		
+		telefoneDAO.cadastrarTelefone(paciente);
+	}
+	
+	public List<Telefone> getTelefones(Paciente paciente) throws SQLException{
+		
+		return telefoneDAO.getTelefones(paciente);
+	}
+	
+//	public void alteraPlano(Paciente paciente) throws SQLException {
+//		
+//		planoDAO.alteraPlano(paciente);
+//	}
+	
+	public void alteraEndereco(Paciente paciente) throws SQLException {
+		
+		enderecoDAO.alteraEndereco(paciente);
+	}
+	
+	public void alteraTelefone(Paciente paciente) throws Exception {
+		
+		telefoneDAO.alteraTelefone(paciente);
+	}
+	
+	public void excluir(Paciente paciente) throws Exception {
+		
+		pacienteDAO.excluir(paciente);
+	}
+	
+	public void alterar(Paciente paciente) throws Exception {
+		
+		pacienteDAO.alterar(paciente);
+	}
+	
+	public Paciente recuperarPacientePorCpf(String cpf) throws Exception {
+		
+		return pacienteDAO.recuperarPacientePorCpf(cpf);
+	}
+	
+	public Paciente listaPacienteCodigo(Paciente paciente) throws Exception {
+		
+		return pacienteDAO.listaPacienteCogido(paciente);
+	}
+	
+	public List<Paciente> listaPacienteNome(String nome) throws Exception {
+		
+		return pacienteDAO.listarPacientePorNome(nome);
+	}
+	
+	public void cadastrarConsulta(Consulta consulta,Paciente paciente) throws Exception {
+		
+		consultaDAO.cadastrarConsulta(consulta,paciente);
+	}
+	
+	public Data ultimaData() throws Exception{
+		
+		return consultaDAO.ultimaData();
+	}
+	
+	public Consulta verificarConsulta(Consulta consulta) throws Exception {
+		
+		return consultaDAO.verificarConsulta(consulta);
+	}
+	
+	public void cadastrarDataDisponivelAgendada(List<Date> datas) throws Exception{
+		
+		consultaDAO.cadastrarDataDisponivelAgendada(datas);
+	}
+	
+	public List<Date> getLista() throws Exception{
+		return consultaDAO.getLista();
+	}
+	public  void removeData(Date data) throws Exception {
+		consultaDAO.removeData(data);
+	}
+	public  void removeDataDiaAnterior() throws Exception {
+		consultaDAO.removeDataDiaAnterior();
+	}
+	
+	public List<Telefone> getTelefonesCodigo(Paciente paciente) throws SQLException {
+		
+		return telefoneDAO.getTelefonesCodigo(paciente);
+	}
+//	public List<Plano> getPlanosCodigo(Paciente paciente) throws SQLException{
+//		
+//		return planoDAO.getPlanosCodigo(paciente);
+//	}
+	
+	public void DesmarcarConsulta(Consulta consulta) throws SQLException{
+		consultaDAO.DesmarcarConsulta(consulta);
+	}
+
+	public List<Consulta> getConsultas(Paciente paciente) throws Exception{
+		
+		return consultaDAO.getConsultas(paciente);
+	}
+	
+	public SimpleDateFormat sdfCadastro(){
+		return this.sdfCadastro;
+	}
+	public Date td(){
+		return this.td;
+	}
+	
+	public SimpleDateFormat getSdfPlano(){
+		return this.sdfPlano;
+	}
+	
+	public void setSdfPlano(SimpleDateFormat sdfPlano){
+		this.sdfPlano = sdfPlano;
+	}
+	
+	
+	public void setTd(Date date){
+		 this.td = date;
+	}
+
+	public Paciente consultarPacientePorCPF(String cpf) {
+		
+		return pacienteDAO.consultarPacientePorCPF(cpf);
+	}
+}

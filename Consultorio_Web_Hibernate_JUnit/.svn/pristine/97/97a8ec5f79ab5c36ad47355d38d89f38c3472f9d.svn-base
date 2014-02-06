@@ -1,0 +1,65 @@
+package control;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import modelo.Paciente;
+import modelo.NomePlano;
+import modelo.TipoTelefone;
+
+public class ListaDataConsulta implements InterfaceLogica {
+
+	private List<String> listaDatasFormatadas = new ArrayList<String>();
+
+	@Override
+	public void executa(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+	}
+	
+	public List<TipoTelefone> getTiposTelefone() {
+		return Arrays.asList(TipoTelefone.values());
+	}
+	
+	public List<NomePlano> getNomePlanos(){
+		
+		return Arrays.asList(NomePlano.values());
+	}
+
+	
+	public List<String> getDataPlano(Paciente paciente) {
+		
+		List<String> dataFormatada = new ArrayList<String>();
+		/*for (Plano plano : paciente.getPlanos()) {
+			
+			dataFormatada.add(plano.getDataValidade().toString("MM/yyyy"));
+			
+		}*/
+		return dataFormatada;
+	}
+	
+	
+	public List<String> getData() {
+
+		/*Consulta consulta = new Consulta();
+
+		try {
+
+			for (Date listaDatas : Singleton.getInstance().getLista(consulta.getListaDataDisponivel())) {
+
+				listaDatasFormatadas.add(Singleton.getInstance().sdf().format(listaDatas));
+			}
+		} catch (Exception e) {
+
+			System.out.println(e.getMessage());
+
+		}
+		return listaDatasFormatadas;*/return null;
+	}
+}

@@ -1,0 +1,188 @@
+package control;
+
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import modelo.Consulta;
+import modelo.Paciente;
+import modelo.Singleton;
+
+public class ConsultaController extends MyDispatch{
+	
+	/*public void cadastrar(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		try {
+		Consulta consulta = new Consulta();
+		consulta.setTipoConsulta(request.getParameter("TipoConsulta"));
+		
+		String dataConsulta = request.getParameter("data");
+
+		Paciente paciente = new Paciente();
+		paciente.setCpf(request.getParameter("cpf").replaceAll("\\.|-|_", ""));
+		
+		
+		
+			
+			paciente = Singleton.getInstance().lista(paciente);
+			
+			Date data = null;
+
+			data = Singleton.getInstance().sdf().parse(dataConsulta);
+
+			Singleton.getInstance().setTd(new Date(data.getTime()));
+			consulta.setDataConsulta(Singleton.getInstance().td());
+			
+			consulta = Singleton.getInstance().verificarConsulta(consulta);
+
+			if (consulta.getDataConsulta() == null) {
+
+				request.setAttribute("mensagem", "Data invalida, favor atualizar a pagina!");
+				request.getRequestDispatcher("agenda-consulta.jsp").forward(request, response);
+
+			} 
+			
+			/*else if ( consulta.getNome() == ""){
+				
+				request.setAttribute("mensagem", "Preencha todos os campos");
+				request.getRequestDispatcher("agenda-consulta.jsp").forward(request, response);
+			}
+			else {
+
+
+					Singleton.getInstance().cadastrarConsulta(consulta,paciente);
+
+					Singleton.getInstance().removeData(Singleton.getInstance().td());
+					
+					request.setAttribute("consulta", consulta);
+					RequestDispatcher rd = request.getRequestDispatcher("consulta-agendada.jsp");
+					rd.forward(request, response);
+					
+					//paciente.getPlanos().clear();
+					//paciente.getTelefones().clear();
+
+			}
+		} catch (ParseException e) {
+			request.setAttribute("mensagem", "Problemas ao formatar a data. "+e.getMessage());
+			request.getRequestDispatcher("agenda-consulta.jsp").forward(request, response);
+			System.out.println(e.getMessage());
+		
+		} catch (Exception e) {
+			request.setAttribute("mensagem", e.getMessage());
+			request.getRequestDispatcher("agenda-consulta.jsp").forward(request, response);
+			System.out.println(e.getMessage());
+		}
+		
+	}
+	
+	public void gerar(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		try {
+			Date date = new Date();
+
+			Calendar dataCalendar = Calendar.getInstance();
+			dataCalendar.setTime(date);
+
+			Singleton.getInstance().setTd(Singleton.getInstance().ultimaData());
+
+			if (Singleton.getInstance().td() == null) {
+				getData(date, dataCalendar);
+			} else {
+
+				dataCalendar.setTimeInMillis(Singleton.getInstance().td()
+						.getTime());
+				getData(date, dataCalendar);
+
+			}
+		} catch (Exception e) {
+
+			System.out.println(e.getMessage());
+		}
+		response.sendRedirect("datasGeradas.jsp");
+
+	}
+
+	public void getData(Date date, Calendar dataCalendar) {
+
+		List<Date> aux = new ArrayList<Date>();
+		Consulta consulta = new Consulta();
+		
+		try {
+			for (int i = 0; i < 2; i++) {
+
+				dataCalendar.add(Calendar.DAY_OF_MONTH, 1);
+				dataCalendar.set(Calendar.HOUR_OF_DAY, 8);
+				dataCalendar.set(Calendar.MINUTE, 0);
+				dataCalendar.set(Calendar.SECOND, 0);
+
+				for (int j = 0; j < 6; j++) {
+					
+					dataCalendar.add(Calendar.HOUR_OF_DAY, 1);
+				
+					String dataFormatada = Singleton.getInstance().sdf().format(dataCalendar.getTime());
+
+					date = Singleton.getInstance().sdf().parse(dataFormatada);
+
+					Singleton.getInstance().setTd(new Timestamp(date.getTime()));
+
+					aux.add(Singleton.getInstance().td());
+
+				}
+			}
+			consulta.setListaDataDisponivel(aux);
+			Singleton.getInstance().cadastrarDataDisponivelAgendada(consulta.getListaDataDisponivel());
+
+		} catch (ParseException e) {
+
+			System.out.println(e.getMessage());
+
+		} catch (Exception e) {
+
+			System.out.println(e.getMessage());
+		}
+
+	}
+	public void lista(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		Paciente paciente = new Paciente();
+		
+		try {
+		paciente.setCpf(request.getParameter("cpf").replaceAll("\\.|-", ""));
+		
+		
+
+			paciente = Singleton.getInstance().lista(paciente);
+
+			if (paciente.getNome() == null) {
+
+				request.setAttribute("mensagem", "Paciente n&atilde;o encontrado!");
+				request.getRequestDispatcher("agenda-consulta.jsp").forward(request, response);
+
+			} else {
+
+				request.setAttribute("paciente", paciente);
+				
+				Singleton.getInstance().removeDataDiaAnterior();
+				request.getRequestDispatcher("agenda-consulta.jsp").forward(request, response);
+			}
+		}catch (Exception e) {
+
+			request.setAttribute("mensagem", e.getMessage());
+			request.getRequestDispatcher("agenda-consulta.jsp").forward(request, response);
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+		}
+	}
+*/
+}

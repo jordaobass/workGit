@@ -1,0 +1,16 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<jsp:include page="header.jsp">
+	<jsp:param value="Consulta Agendada" name="titulo"/>
+</jsp:include>
+
+	<div id="container">
+		<br/><h2>Consulta agendada com sucesso do paciente 
+				<h2 style="COLOR: #ff0000;">${consulta.nome }</h2><br/>
+				para a data <h2 style="COLOR: #ff0000;">
+				<fmt:formatDate value="${consulta.dataConsulta }" pattern="dd/MM/yyyy HH:mm"/></h2>
+			</h2><br/>
+		<!-- <br/><br/><a href="index.jsp"><b>In&iacute;cio</b>  -->
+		
+	</div>
+
+<jsp:include page="footer.jsp"></jsp:include>
